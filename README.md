@@ -11,11 +11,11 @@ I used the etl-notebook as an oppurtunity to learn how to set up postgres databa
 
         postgres=# \c dwhstaging 
     
-        You are now connected to database "dwhstaging" as user "postgres".
+         You are now connected to database "dwhstaging" as user "postgres".
 
         dwhstaging=# GRANT ALL  ON SCHEMA public TO admin;
 
-        GRANT
+         GRANT
 
         dwhstaging=# GRANT ALL  ON SCHEMA public TO admin;
-
+6. You need to provide the path to configuration file in sql_queries.py and etl-notebook.ipynb (You can use the template proovided in dwh.cfg)
