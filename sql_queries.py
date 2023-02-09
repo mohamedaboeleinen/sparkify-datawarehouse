@@ -23,20 +23,56 @@ staging_events_table_create= ("""
 
 staging_songs_table_create = ("""
 """)
-
-songplay_table_create = ("""
+# TODO: change serial type to match amazon redshift, check identity (0,1)
+songplay_table_create = (""" CREATE TABLE IF NOT exists songplays (
+                             songplay_id serial PRIMARY KEY,
+                             start_time timestamp NOT NULL, 
+                             user_id int NOT NULL, 
+                             level varchar,
+                             song_id varchar, 
+                             artist_id varchar,
+                             session_id int NOT NULL, 
+                             location varchar NOT NULL, 
+                             user_agent varchar NOT NULL
+);
 """)
 
-user_table_create = ("""
+user_table_create = ("""CREATE TABLE IF NOT EXISTS users (
+                        user_id int PRIMARY KEY, 
+                        first_name varchar NOT NULL, 
+                        last_name varchar NOT NULL, 
+                        gender varchar NOT NULL, 
+                        level varchar NOT NULL
+);
 """)
 
-song_table_create = ("""
+song_table_create = ("""CREATE TABLE IF NOT EXISTS songs (
+                        song_id varchar PRIMARY KEY,
+                        title varchar NOT NULL, 
+                        artist_id varchar NOT NULL, 
+                        year int NOT NULL, 
+                        duration decimal NOT NULL
+);
 """)
 
-artist_table_create = ("""
+artist_table_create = (""""CREATE TABLE IF NOT EXISTS artists (
+                        artist_id varchar PRIMARY KEY,
+                        name varchar NOT NULL, 
+                        location varchar, 
+                        longitude float, 
+                        latitude float
+);
 """)
 
-time_table_create = ("""
+time_table_create = ("""CREATE TABLE IF NOT EXISTS time (
+                         start_time timestamp PRIMARY KEY, 
+                         hour int NOT NULL, 
+                         day int NOT NULL, 
+                         week int NOT NULL, 
+                         month int NOT NULL, 
+                         year int NOT NULL, 
+                         weekday int NOT NULL
+);
 """)
 
 # STAGING TABLES
