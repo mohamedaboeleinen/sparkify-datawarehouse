@@ -18,4 +18,4 @@ I used the etl-notebook as an oppurtunity to learn how to set up postgres databa
          GRANT
 
         dwhstaging=# GRANT ALL  ON SCHEMA public TO admin;
-6. You need to provide the path to configuration file in sql_queries.py and etl-notebook.ipynb (You can use the template proovided in dwh.cfg)
+6. You need to provide the path to configuration file in sql_queries.py, create_tables.py and etl-notebook.ipynb (You can use the template proovided in dwh.cfg)
