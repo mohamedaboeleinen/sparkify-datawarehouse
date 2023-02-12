@@ -19,8 +19,9 @@ def main():
     config = configparser.ConfigParser()
 ## provide path to the configuration file, you can fill in the values in the template provided
     config.read('mydwh.cfg')
+    conn = psycopg2.connect("host=127.0.0.1 dbname=dwhstaging user=admin password=admin")
 
-    conn = psycopg2.connect("host={} dbname={} user={} password={} port={}".format(*config['CLUSTER'].values()))
+    # conn = psycopg2.connect("host={} dbname={} user={} password={} port={}".format(*config['CLUSTER'].values()))
     cur = conn.cursor()
 
     drop_tables(cur, conn)

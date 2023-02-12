@@ -18,10 +18,36 @@ time_table_drop = "DROP TABLE IF EXISTS time"
 
 # CREATE TABLES
 
-staging_events_table_create= ("""
+staging_events_table_create= (""" CREATE TABLE IF NOT EXISTS events (
+                                  event_id      serial      PRIMARY KEY,  
+                                  artist        varchar     NOT NULL, 
+                                  auth          varchar     NOT NULL, 
+                                  gender        varchar     NOT NULL, 
+                                  iteminSession int         NOT NULL, 
+                                  last_name     varchar     NOT NULL, 
+                                  length        decimal     NOT NULL, 
+                                  level         varchar     NOT NULL, 
+                                  location      varchar     NOT NULL, 
+                                  song          varchar     NOT NULL, 
+                                  start_time    timestamp   NOT NULL, 
+                                  user_agent    varchar     NOT NULL, 
+                                  user_id       int         NOT NULL
+);
 """)
 
-staging_songs_table_create = ("""
+staging_songs_table_create = (""" CREATE TABLE IF NOT EXISTS events (
+                                  song_id int NOT NULL,
+                                  title varchar NOT NULL,
+                                  duration decimal NOT NULL, 
+                                  year int NOT NULL, 
+                                  artist_id int NOT NULL, 
+                                  artist_name varchar NOT NULL, 
+                                  artist_latitude decimal NOT NULL, 
+                                  artist_longitude decimal NOT NULL, 
+                                  artist_location varchar NOT NULL, 
+                                  num_songs int NOT NULL
+
+);
 """)
 # TODO: change serial type to match amazon redshift, check identity (0,1)
 songplay_table_create = (""" CREATE TABLE IF NOT exists songplays (
@@ -55,7 +81,7 @@ song_table_create = ("""CREATE TABLE IF NOT EXISTS songs (
 );
 """)
 
-artist_table_create = (""""CREATE TABLE IF NOT EXISTS artists (
+artist_table_create = ("""CREATE TABLE IF NOT EXISTS artists (
                         artist_id varchar PRIMARY KEY,
                         name varchar NOT NULL, 
                         location varchar, 
@@ -104,5 +130,5 @@ time_table_insert = ("""
 
 create_table_queries = [staging_events_table_create, staging_songs_table_create, songplay_table_create, user_table_create, song_table_create, artist_table_create, time_table_create]
 drop_table_queries = [staging_events_table_drop, staging_songs_table_drop, songplay_table_drop, user_table_drop, song_table_drop, artist_table_drop, time_table_drop]
-copy_table_queries = [staging_events_copy, staging_songs_copy]
-insert_table_queries = [songplay_table_insert, user_table_insert, song_table_insert, artist_table_insert, time_table_insert]
+#copy_table_queries = [staging_events_copy, staging_songs_copy]
+#insert_table_queries = [songplay_table_insert, user_table_insert, song_table_insert, artist_table_insert, time_table_insert]
