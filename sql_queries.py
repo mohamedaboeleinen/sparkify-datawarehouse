@@ -5,6 +5,10 @@ import configparser
 config = configparser.ConfigParser()
 ## provide path to the configuration file, you can fill in the values in the template provided
 config.read('mydwh.cfg')
+log_data= config.get('S3','LOG_DATA')
+song_data= config.get('S3','SONG_DATA')
+iam_role=config.get('IAM_ROLE','ARN')
+
 
 # DROP TABLES
 
@@ -18,7 +22,7 @@ time_table_drop = "DROP TABLE IF EXISTS time"
 
 # CREATE TABLES
 
-staging_events_table_create= (""" CREATE TABLE IF NOT EXISTS events (
+staging_events_table_create= (""" CREATE TABLE IF NOT EXISTS staging_events (
                                   artist        varchar, 
                                   auth          varchar, 
                                   gender        varchar, 
@@ -34,7 +38,7 @@ staging_events_table_create= (""" CREATE TABLE IF NOT EXISTS events (
 ); 
 """)
 
-staging_songs_table_create = (""" CREATE TABLE IF NOT EXISTS events (
+staging_songs_table_create = (""" CREATE TABLE IF NOT EXISTS staging_songs (
                                   song_id int,
                                   title varchar,
                                   duration decimal, 
@@ -102,11 +106,17 @@ time_table_create = ("""CREATE TABLE IF NOT EXISTS time (
 
 # STAGING TABLES
 
-staging_events_copy = (""" copy events FROM 's3://udacity-dend/log_data'
-""").format()
+staging_events_copy = (""" copy staging_events FROM {}
+                                credentials 'aws_iam_role={}'
+                                gzip DELIMETER ';' 
+                                region 'us-west-2'
+""").format(log_data, iam_role)
 
-staging_songs_copy = ("""
-""").format()
+staging_songs_copy = ("""copy staging_songs FROM {}
+                                credentials 'aws_iam_role={}'
+                                gzip DELIMETER ';' 
+                                region 'us-west-2'
+""").format(song_data, iam_role)
 
 # FINAL TABLES
 
