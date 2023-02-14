@@ -6,6 +6,9 @@ config = configparser.ConfigParser()
 ## provide path to the configuration file, you can fill in the values in the template provided
 config.read('mydwh.cfg')
 log_data= config.get('S3','LOG_DATA')
+
+log_json_path= config.get('S3','LOG_JSONPATH')
+
 song_data= config.get('S3','SONG_DATA')
 iam_role=config.get('IAM_ROLE','ARN')
 
@@ -25,20 +28,27 @@ time_table_drop = "DROP TABLE IF EXISTS time"
 staging_events_table_create= (""" CREATE TABLE IF NOT EXISTS staging_events (
                                   artist        varchar, 
                                   auth          varchar, 
+                                  first_name    varchar, 
                                   gender        varchar, 
                                   iteminSession int, 
                                   last_name     varchar, 
                                   length        decimal, 
                                   level         varchar, 
                                   location      varchar, 
-                                  song          varchar, 
-                                  start_time    timestamp, 
+                                  method        varchar,
+                                  page          varchar,
+                                  registration  double precision,	
+                                  session_id    int, 
+                                  song          varchar,
+                                  status        int,  
+                                  start_time    bigint, 
                                   user_agent    varchar, 
-                                  user_id       int          
+                                  user_id       varchar          
 ); 
 """)
 
 staging_songs_table_create = (""" CREATE TABLE IF NOT EXISTS staging_songs (
+                                  num_songs int,
                                   song_id int,
                                   title varchar,
                                   duration decimal, 
@@ -47,14 +57,12 @@ staging_songs_table_create = (""" CREATE TABLE IF NOT EXISTS staging_songs (
                                   artist_name varchar, 
                                   artist_latitude decimal, 
                                   artist_longitude decimal, 
-                                  artist_location varchar, 
-                                  num_songs int
-
+                                  artist_location varchar
 );
 """)
-# TODO: change serial type to match amazon redshift, check identity (0,1)
+
 songplay_table_create = (""" CREATE TABLE IF NOT exists songplays (
-                             songplay_id serial PRIMARY KEY,
+                             songplay_id int identity (0,1) PRIMARY KEY,
                              start_time timestamp NOT NULL, 
                              user_id int NOT NULL, 
                              level varchar,
@@ -108,9 +116,9 @@ time_table_create = ("""CREATE TABLE IF NOT EXISTS time (
 
 staging_events_copy = (""" copy staging_events FROM {}
                                 credentials 'aws_iam_role={}'
-                                gzip DELIMETER ';' 
                                 region 'us-west-2'
-""").format(log_data, iam_role)
+                                JSON {}
+""").format(log_data, iam_role,log_json_path)
 
 staging_songs_copy = ("""copy staging_songs FROM {}
                                 credentials 'aws_iam_role={}'
